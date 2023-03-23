@@ -1,17 +1,17 @@
 import Player from "@vimeo/player";
+import throttle from "lodash.throttle";
+
       const iframe = document.querySelector('iframe');
       const player = new Player(iframe);
-  
-      player.on('play', function() {
-          console.log('played the video!');
-      });
-  
-      player.getVideoTitle().then(function(title) {
-          console.log('title:', title);
-      });
+      const CURRENT_TIME = "videoplayer-current-time";
+     
+      player.on('timeupdate', throttle(onPlayTimeUpdate, 2000)); 
 
-    //   const timeupdate = function() {
-    //     console.log(timeupdate.duration);
-    //   }
-
-    //   player.on('timeupdate', timeupdate);
+      function onPlayTimeUpdate(e) {
+        const currentTimeValue = e.seconds;
+        console.log(currentTimeValue);
+        
+        localStorage.setItem(CURRENT_TIME, currentTimeValue);
+      }
+      
+  player.setCurrentTime(localStorage.getItem(CURRENT_TIME));
